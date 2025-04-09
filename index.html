@@ -287,6 +287,16 @@
       });
     }
   
+    function closePanel(triggerName) {
+      wrapper.style.opacity = '1';
+      wrapper.style.transition = 'opacity 0.3s ease';
+      wrapper.style.opacity = '0';
+      setTimeout(() => {
+        mp.trigger(triggerName);
+        mp.invoke('focus', false); // desativa o mouse
+      }, 300);
+    }
+  
     rentBtn.addEventListener('click', () => {
       modal.style.display = 'flex';
     });
@@ -303,24 +313,17 @@
     });
   
     document.querySelector('.close-btn').addEventListener('click', () => {
-      wrapper.style.opacity = '1';
-      wrapper.style.transition = 'opacity 0.3s ease';
-      wrapper.style.opacity = '0';
-      setTimeout(() => mp.trigger('closeCEF'), 300);
+      closePanel('closeCEF');
     });
   
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        wrapper.style.opacity = '1';
-        wrapper.style.transition = 'opacity 0.3s ease';
-        wrapper.style.opacity = '0';
-        setTimeout(() => mp.trigger('escapeKey'), 300);
+        closePanel('escapeKey');
       }
     });
   
     createSidebarItems();
     updateBikeInfo('mountain');
   </script>
-  
 </body>
 </html>
