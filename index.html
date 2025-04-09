@@ -254,14 +254,15 @@
         nome: 'Bike'
       }
     };
-
+  
     const sidebar = document.getElementById('sidebar');
     const rentBtn = document.querySelector('.rent-btn');
     const img = document.getElementById('bike-img');
     const modal = document.getElementById('confirm-modal');
     const cancelBtn = document.querySelector('.btn-cancel');
     const confirmBtn = document.querySelector('.btn-confirm');
-
+    const wrapper = document.querySelector('.cef-wrapper');
+  
     function updateBikeInfo(type) {
       const data = bikes[type];
       img.src = data.img;
@@ -270,7 +271,7 @@
       document.getElementById('conforto').style.width = data.conforto + '%';
       rentBtn.textContent = `Alugar ${data.nome}`;
     }
-
+  
     function createSidebarItems() {
       Object.entries(bikes).forEach(([type, data], index) => {
         const div = document.createElement('div');
@@ -285,28 +286,41 @@
         sidebar.appendChild(div);
       });
     }
-
+  
     rentBtn.addEventListener('click', () => {
       modal.style.display = 'flex';
     });
-
+  
     cancelBtn.addEventListener('click', () => {
       modal.style.display = 'none';
     });
-
+  
     confirmBtn.addEventListener('click', () => {
       modal.style.display = 'none';
       const selected = document.querySelector('.bike-item.selected');
       const type = selected.dataset.type;
       mp.trigger('rentBike', type);
     });
-
+  
     document.querySelector('.close-btn').addEventListener('click', () => {
-      mp.trigger('closeCEF');
+      wrapper.style.opacity = '1';
+      wrapper.style.transition = 'opacity 0.3s ease';
+      wrapper.style.opacity = '0';
+      setTimeout(() => mp.trigger('closeCEF'), 300);
     });
-
+  
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        wrapper.style.opacity = '1';
+        wrapper.style.transition = 'opacity 0.3s ease';
+        wrapper.style.opacity = '0';
+        setTimeout(() => mp.trigger('escapeKey'), 300);
+      }
+    });
+  
     createSidebarItems();
     updateBikeInfo('mountain');
   </script>
+  
 </body>
 </html>
