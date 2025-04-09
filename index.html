@@ -1,155 +1,157 @@
-<!-- File: painel_bike.html -->
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Alugar bike</title>
-  <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    body {
-      background: rgba(0,0,0,0.85);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      width: 800px;
-      height: 450px;
-      background: #15171c;
-      border-radius: 12px;
-      display: flex;
-      overflow: hidden;
-      position: relative;
-    }
-    .left {
-      width: 250px;
-      background: #1c1e24;
-      padding: 20px 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .bike-option {
-      padding: 15px 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: white;
-      font-size: 16px;
-    }
-    .bike-option.selected {
-      background: #3f68f3;
-      border-radius: 8px 0 0 8px;
-    }
-    .bike-option img {
-      width: 24px;
-    }
-    .right {
-      flex: 1;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .bike-img {
-      text-align: center;
-    }
-    .bike-img img {
-      height: 160px;
-    }
-    .stats {
-      margin-top: 20px;
-    }
-    .stat {
-      margin-bottom: 8px;
-    }
-    .stat span {
-      display: inline-block;
-      width: 160px;
-    }
-    .bar {
-      background: #2e3038;
-      border-radius: 5px;
-      height: 6px;
-      overflow: hidden;
-    }
-    .bar-fill {
-      background: #3f68f3;
-      height: 100%;
-    }
-    .confirm {
-      align-self: flex-end;
-    }
-    .confirm button {
-      background: #3f68f3;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alugar Bike</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="container" id="painel">
-    <div class="close-btn" onclick="fecharPainel()">&times;</div>
-    <div class="left">
-      <button class="bike-option selected" onclick="selecionarBike('mountain')"><img src="mountain.png">Mountain Bike</button>
-      <button class="bike-option" onclick="selecionarBike('bmx')"><img src="bmx.png">BMX</button>
-      <button class="bike-option" onclick="selecionarBike('bike')"><img src="bike.png">Bike</button>
+<body class="bg-transparent flex items-center justify-center min-h-screen">
+  <div id="modal" class="bg-gray-800 rounded-2xl w-[600px] md:w-[750px] p-4 text-white relative transition transform duration-500 scale-90 opacity-0">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <div class="bg-blue-500 p-1 rounded">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" class="h-5 w-5">
+            <path d="M5.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm0 2a4.5 4.5 0 1 1 3.872-6.812L10.5 11H9a1 1 0 0 1 0-2h2.5a1 1 0 0 1 .894.553L14.382 13h3.118a1 1 0 0 1 0 2h-2.382l-1.106 2.212A4.5 4.5 0 1 1 18.5 18a4.48 4.48 0 0 1-3.175-1.313l1.084-2.167H14a1 1 0 0 1-.894-.553L11.618 11H11l-1.372 2.743A4.5 4.5 0 0 1 5.5 20zM18.5 16a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" />
+          </svg>
+        </div>
+        <span class="text-sm font-semibold">Alugar bike</span>
+      </div>
+      <button onclick="fecharModal()" class="text-white hover:text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
-    <div class="right">
-      <div class="bike-img" id="bikeImg">
-        <img src="mountain.png">
-      </div>
-      <div class="stats">
-        <div class="stat"><span>Velocidade do veículo:</span><div class="bar"><div class="bar-fill" style="width: 80%;"></div></div></div>
-        <div class="stat"><span>Suspensão do veículo:</span><div class="bar"><div class="bar-fill" style="width: 60%;"></div></div></div>
-        <div class="stat"><span>Conforto do veículo:</span><div class="bar"><div class="bar-fill" style="width: 70%;"></div></div></div>
-      </div>
-      <div class="confirm">
-        <button onclick="confirmarAluguel()">Alugar bike</button>
+
+    <!-- Content -->
+    <div class="flex gap-4">
+      <!-- Left list -->
+      <div id="bike-list" class="flex flex-col gap-2 w-1/3"></div>
+
+      <!-- Right content -->
+      <div class="flex-1 flex flex-col justify-between">
+        <img id="bike-image" src="https://i.imgur.com/UbQZyDM.png" alt="bike" class="w-full max-h-40 object-contain mb-4 transition-all duration-300" />
+        <div class="text-sm space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-40">Velocidade do veículo:</span>
+            <div class="w-full bg-gray-600 h-1 rounded-full">
+              <div id="bar-velocidade" class="bg-blue-500 h-1 rounded-full w-3/4"></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-40">Suspensão do veículo:</span>
+            <div class="w-full bg-gray-600 h-1 rounded-full">
+              <div id="bar-suspensao" class="bg-blue-500 h-1 rounded-full w-1/2"></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-40">Conforto do veículo:</span>
+            <div class="w-full bg-gray-600 h-1 rounded-full">
+              <div id="bar-conforto" class="bg-blue-500 h-1 rounded-full w-2/3"></div>
+            </div>
+          </div>
+        </div>
+        <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl">Alugar bike</button>
       </div>
     </div>
   </div>
 
   <script>
-    let bikeSelecionada = 'mountain';
+    const bikes = [
+      {
+        name: 'Mountain Bike',
+        image: 'mountain.png',
+        velocidade: 0.75,
+        suspensao: 0.5,
+        conforto: 0.66,
+      },
+      {
+        name: 'BMX',
+        image: 'bmx.png',
+        velocidade: 0.6,
+        suspensao: 0.7,
+        conforto: 0.4,
+      },
+      {
+        name: 'Bike',
+        image: 'https://i.imgur.com/OZ0vFET.png',
+        velocidade: 0.9,
+        suspensao: 0.6,
+        conforto: 0.3,
+      },
+    ];
 
-    function selecionarBike(tipo) {
-      bikeSelecionada = tipo;
-      document.querySelectorAll('.bike-option').forEach(btn => btn.classList.remove('selected'));
-      event.target.closest('button').classList.add('selected');
-      document.getElementById('bikeImg').innerHTML = `<img src="${tipo}.png">`;
+    const listContainer = document.getElementById('bike-list');
+    const imageEl = document.getElementById('bike-image');
+    const barVel = document.getElementById('bar-velocidade');
+    const barSusp = document.getElementById('bar-suspensao');
+    const barConf = document.getElementById('bar-conforto');
+
+    function renderBikeOptions() {
+      listContainer.innerHTML = '';
+      bikes.forEach((bike, index) => {
+        const btn = document.createElement('button');
+        btn.className = `flex items-center gap-2 p-2 rounded-xl hover:bg-gray-600 ${index === 0 ? 'bg-blue-500' : 'bg-gray-700'}`;
+        btn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" class="h-5 w-5">
+            <path d="M5.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm0 2a4.5 4.5 0 1 1 3.872-6.812L10.5 11H9a1 1 0 0 1 0-2h2.5a1 1 0 0 1 .894.553L14.382 13h3.118a1 1 0 0 1 0 2h-2.382l-1.106 2.212A4.5 4.5 0 1 1 18.5 18a4.48 4.48 0 0 1-3.175-1.313l1.084-2.167H14a1 1 0 0 1-.894-.553L11.618 11H11l-1.372 2.743A4.5 4.5 0 0 1 5.5 20zM18.5 16a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" />
+          </svg>
+          <span>${bike.name}</span>
+        `;
+        btn.addEventListener('click', () => selectBike(index));
+        listContainer.appendChild(btn);
+      });
     }
 
-    function confirmarAluguel() {
-      if(confirm(`Tem certeza que deseja alugar a ${bikeSelecionada}?`)) {
-        cef_emit_event(cef_player_id, "alugar_bike", CEFSTR(bikeSelecionada));
-        fecharPainel();
-      }
+    function selectBike(index) {
+      const bike = bikes[index];
+      imageEl.src = bike.image;
+      barVel.style.width = (bike.velocidade * 100) + '%';
+      barSusp.style.width = (bike.suspensao * 100) + '%';
+      barConf.style.width = (bike.conforto * 100) + '%';
+
+      [...listContainer.children].forEach((btn, i) => {
+        btn.classList.toggle('bg-blue-500', i === index);
+        btn.classList.toggle('bg-gray-700', i !== index);
+      });
+
+      localStorage.setItem('selectedBike', index);
     }
 
-    function fecharPainel() {
-      cef_hide_browser(cef_player_id, 1, true);
-      TogglePlayerControllable(cef_player_id, true);
-      ShowCursor(0);
+    function fecharModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.add('opacity-0', 'scale-90');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
     }
-  </script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+    renderBikeOptions();
+    const modal = document.getElementById('modal');
+    modal.style.display = 'block';
+    setTimeout(() => {
+      modal.classList.remove('opacity-0', 'scale-90');
+      modal.classList.add('opacity-100', 'scale-100');
+    }, 100);
+
+    const savedIndex = localStorage.getItem('selectedBike');
+    selectBike(savedIndex ? parseInt(savedIndex) : 0);
+  });
+
+  // ✅ Aqui está o bloco CEF emit
+  document.querySelector('button.mt-4').addEventListener('click', () => {
+    const selectedIndex = localStorage.getItem('selectedBike') || 0;
+    const selectedBike = bikes[selectedIndex];
+
+    if (typeof cef_emit !== 'undefined') {
+      cef_emit('alugar_bike', selectedIndex, selectedBike.name);
+    } else {
+      console.log('cef_emit não está disponível.');
+    }
+  });
+</script>
 </body>
 </html>
