@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alugar Bike</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background-color: #0f111a00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .cef-wrapper {
+      background-color: #151822;
+      border-radius: 12px;
+      width: 640px;
+      height: 360px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .header-title img {
+      width: 16px;
+      height: 16px;
+      filter: brightness(0) invert(1);
+    }
+    .close-btn {
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+    }
+    .content {
+      display: flex;
+      flex: 1;
+      gap: 16px;
+    }
+    .sidebar {
+      width: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bike-item {
+      background-color: #1e212d;
+      border-radius: 6px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .bike-item:hover,
+    .bike-item.selected {
+      background-color: #3d5afe;
+    }
+    .bike-item img {
+      width: 18px;
+      height: 18px;
+      filter: brightness(0) invert(1);
+    }
+    .details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .bike-image {
+      height: 160px;
+    }
+    .stats {
+      width: 100%;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: white;
+      gap: 10px;
+    }
+    .bar {
+      background-color: #1e1f29;
+      height: 6px;
+      border-radius: 4px;
+      flex: 1;
+      position: relative;
+    }
+    .bar-fill {
+      background-color: #3d5afe;
+      height: 100%;
+      border-radius: 4px;
+    }
+    .rent-btn {
+    background-color: #3d5afe;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    width: 120px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+    .rent-btn:hover {
+      background-color: #304ffe;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .modal-content {
+      background-color: #1e212d;
+      padding: 30px;
+      border-radius: 12px;
+      color: white;
+      width: 300px;
+      text-align: center;
+    }
+    .modal-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .modal-buttons button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-cancel {
+      background-color: #ccc;
+      color: #333;
+    }
+    .btn-confirm {
+      background-color: #3d5afe;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="cef-wrapper">
+    <div class="header">
+      <div class="header-title">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/bicycle.png">
+        Alugar bike
+      </div>
+      <div class="close-btn">&times;</div>
+    </div>
+    <div class="content">
+      <div class="sidebar" id="sidebar"></div>
+      <div class="details">
+        <img class="bike-image" id="bike-img" src="mountain.png" alt="Bike">
+        <div class="stats">
+          <div class="stat">
+            Velocidade do veículo:
+            <div class="bar">
+              <div class="bar-fill" id="velocidade"></div>
+            </div>
+          </div>
+          <div class="stat">
+            Suspensão do veículo:
+            <div class="bar">
+              <div class="bar-fill" id="suspensao"></div>
+            </div>
+          </div>
+          <div class="stat">
+            Conforto do veículo:
+            <div class="bar">
+              <div class="bar-fill" id="conforto"></div>
+            </div>
+          </div>
+        </div>
+        <button class="rent-btn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="confirm-modal">
+    <div class="modal-content">
+      <p>Deseja realmente alugar esta bike?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel">Cancelar</button>
+        <button class="btn-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const bikes = {
+      mountain: {
+        img: 'mountain.png',
+        velocidade: 80,
+        suspensao: 50,
+        conforto: 90,
+        nome: 'Mountain Bike'
+      },
+      bmx: {
+        img: 'bmx.png',
+        velocidade: 60,
+        suspensao: 30,
+        conforto: 40,
+        nome: 'BMX'
+      },
+      normal: {
+        img: 'bike.png',
+        velocidade: 70,
+        suspensao: 40,
+        conforto: 60,
+        nome: 'Bike'
+      }
+    };
+
+    const sidebar = document.getElementById('sidebar');
+    const rentBtn = document.querySelector('.rent-btn');
+    const img = document.getElementById('bike-img');
+    const modal = document.getElementById('confirm-modal');
+    const cancelBtn = document.querySelector('.btn-cancel');
+    const confirmBtn = document.querySelector('.btn-confirm');
+
+    function updateBikeInfo(type) {
+      const data = bikes[type];
+      img.src = data.img;
+      document.getElementById('velocidade').style.width = data.velocidade + '%';
+      document.getElementById('suspensao').style.width = data.suspensao + '%';
+      document.getElementById('conforto').style.width = data.conforto + '%';
+      rentBtn.textContent = `Alugar ${data.nome}`;
+    }
+
+    function createSidebarItems() {
+      Object.entries(bikes).forEach(([type, data], index) => {
+        const div = document.createElement('div');
+        div.className = 'bike-item' + (index === 0 ? ' selected' : '');
+        div.dataset.type = type;
+        div.innerHTML = `<img src="https://img.icons8.com/ios-filled/50/ffffff/bicycle.png"/> ${data.nome}`;
+        div.addEventListener('click', () => {
+          document.querySelectorAll('.bike-item').forEach(el => el.classList.remove('selected'));
+          div.classList.add('selected');
+          updateBikeInfo(type);
+        });
+        sidebar.appendChild(div);
+      });
+    }
+
+    rentBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    confirmBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      const selected = document.querySelector('.bike-item.selected');
+      const type = selected.dataset.type;
+      mp.trigger('rentBike', type);
+    });
+
+    document.querySelector('.close-btn').addEventListener('click', () => {
+      mp.trigger('closeCEF');
+    });
+
+    createSidebarItems();
+    updateBikeInfo('mountain');
+  </script>
+</body>
+</html>
