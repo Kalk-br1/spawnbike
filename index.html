@@ -121,17 +121,18 @@
     }
 
     function fecharModal() {
-    const modal = document.getElementById('modal');
-    modal.classList.add('opacity-0', 'scale-90');
-    setTimeout(() => {
+  const modal = document.getElementById('modal');
+  modal.classList.add('opacity-0', 'scale-90');
+  setTimeout(() => {
     modal.style.display = 'none';
-    }, 300);
+  }, 300);
 
-  // Opcional: avisar o servidor que o menu foi fechado
+  // 🔄 Avisar o servidor para descongelar o jogador e esconder o mouse
   if (typeof cef_emit !== 'undefined') {
     cef_emit('fechar_menu_bike');
   }
 }
+
     window.addEventListener('DOMContentLoaded', () => {
     renderBikeOptions();
     const modal = document.getElementById('modal');
