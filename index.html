@@ -18,7 +18,7 @@
         </div>
         <span class="text-sm font-semibold">Alugar bike</span>
       </div>
-      <button onclick="fecharModal()" class="text-white hover:text-gray-400">
+      <button id="fechar-btn" class="text-white hover:text-gray-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -27,12 +27,9 @@
 
     <!-- Content -->
     <div class="flex gap-4">
-      <!-- Left list -->
       <div id="bike-list" class="flex flex-col gap-2 w-1/3"></div>
-
-      <!-- Right content -->
       <div class="flex-1 flex flex-col justify-between">
-        <img id="bike-image" src="https://i.imgur.com/UbQZyDM.png" alt="bike" class="w-full max-h-40 object-contain mb-4 transition-all duration-300" />
+        <img id="bike-image" src="mountain.png" alt="bike" class="w-full max-h-40 object-contain mb-4 transition-all duration-300" />
         <div class="text-sm space-y-1">
           <div class="flex items-center gap-2">
             <span class="w-40">Velocidade do veículo:</span>
@@ -53,7 +50,7 @@
             </div>
           </div>
         </div>
-        <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl">Alugar bike</button>
+        <button id="alugar-btn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl">Alugar bike</button>
       </div>
     </div>
   </div>
@@ -96,7 +93,7 @@
         btn.className = `flex items-center gap-2 p-2 rounded-xl hover:bg-gray-600 ${index === 0 ? 'bg-blue-500' : 'bg-gray-700'}`;
         btn.innerHTML = `
           <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" class="h-5 w-5">
-            <path d="M5.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm0 2a4.5 4.5 0 1 1 3.872-6.812L10.5 11H9a1 1 0 0 1 0-2h2.5a1 1 0 0 1 .894.553L14.382 13h3.118a1 1 0 0 1 0 2h-2.382l-1.106 2.212A4.5 4.5 0 1 1 18.5 18a4.48 4.48 0 0 1-3.175-1.313l1.084-2.167H14a1 1 0 0 1-.894-.553L11.618 11H11l-1.372 2.743A4.5 4.5 0 0 1 5.5 20zM18.5 16a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" />
+            <path d="..." />
           </svg>
           <span>${bike.name}</span>
         `;
@@ -121,42 +118,44 @@
     }
 
     function fecharModal() {
-  const modal = document.getElementById('modal');
-  modal.classList.add('opacity-0', 'scale-90');
-  setTimeout(() => {
-    modal.style.display = 'none';
-  }, 300);
+      const modal = document.getElementById('modal');
+      modal.classList.add('opacity-0', 'scale-90');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
 
-  // 🔄 Avisar o servidor para descongelar o jogador e esconder o mouse
-  if (typeof cef_emit !== 'undefined') {
-    cef_emit('fechar_menu_bike');
-  }
-}
+      // 🔄 Emitir para o servidor encerrar o menu e liberar o jogador
+      if (typeof cef_emit !== 'undefined') {
+        cef_emit('fechar_menu_bike');
+      }
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
-    renderBikeOptions();
-    const modal = document.getElementById('modal');
-    modal.style.display = 'block';
-    setTimeout(() => {
-      modal.classList.remove('opacity-0', 'scale-90');
-      modal.classList.add('opacity-100', 'scale-100');
-    }, 100);
+      renderBikeOptions();
+      const modal = document.getElementById('modal');
+      modal.style.display = 'block';
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'scale-90');
+        modal.classList.add('opacity-100', 'scale-100');
+      }, 100);
 
-    const savedIndex = localStorage.getItem('selectedBike');
-    selectBike(savedIndex ? parseInt(savedIndex) : 0);
-  });
+      const savedIndex = localStorage.getItem('selectedBike');
+      selectBike(savedIndex ? parseInt(savedIndex) : 0);
+    });
 
-  // ✅ Aqui está o bloco CEF emit
-  document.querySelector('button.mt-4').addEventListener('click', () => {
-    const selectedIndex = localStorage.getItem('selectedBike') || 0;
-    const selectedBike = bikes[selectedIndex];
+    document.getElementById('alugar-btn').addEventListener('click', () => {
+      const selectedIndex = localStorage.getItem('selectedBike') || 0;
+      const selectedBike = bikes[selectedIndex];
 
-    if (typeof cef_emit !== 'undefined') {
-      cef_emit('alugar_bike', selectedIndex, selectedBike.name);
-    } else {
-      console.log('cef_emit não está disponível.');
-    }
-  });
-</script>
+      if (typeof cef_emit !== 'undefined') {
+        cef_emit('alugar_bike', selectedIndex, selectedBike.name);
+      } else {
+        console.log('cef_emit não está disponível.');
+      }
+    });
+
+    // botão "X"
+    document.getElementById('fechar-btn').addEventListener('click', fecharModal);
+  </script>
 </body>
 </html>
