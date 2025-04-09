@@ -293,7 +293,8 @@
       wrapper.style.opacity = '0';
       setTimeout(() => {
         mp.trigger(triggerName);
-        mp.invoke('focus', false); // desativa o mouse
+        mp.invoke('cef.hideCursor');
+        mp.trigger('unfreezePlayer'); // envia evento para o PAWN descongelar o jogador
       }, 300);
     }
   
@@ -310,6 +311,8 @@
       const selected = document.querySelector('.bike-item.selected');
       const type = selected.dataset.type;
       mp.trigger('rentBike', type);
+      mp.invoke('cef.hideCursor');
+      mp.trigger('unfreezePlayer');
     });
   
     document.querySelector('.close-btn').addEventListener('click', () => {
@@ -322,8 +325,11 @@
       }
     });
   
+    mp.invoke('cef.showCursor');
+    mp.trigger('freezePlayer'); // congela jogador ao abrir painel
     createSidebarItems();
     updateBikeInfo('mountain');
   </script>
+  
 </body>
 </html>
